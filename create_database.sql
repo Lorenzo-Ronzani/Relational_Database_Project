@@ -26,7 +26,7 @@ GO
 
 
 /* ================================================================
-   DATA2201 – Phase 1
+   DATA2201 Phase 1
    File: create_database.sql
    Group: Wesley Lomazzi, Lorenzo Ranzoni, Gabriel Passarelli
    ================================================================= */
@@ -130,7 +130,7 @@ CREATE TABLE dbo.Overdraft (
  ,Amount       decimal(18,2) NOT NULL
  ,CheckNumber  varchar(30)   NULL
  ,CONSTRAINT PK_Overdraft PRIMARY KEY (OverdraftID)
- /* “Checking only” rule will be enforced by trigger in Phase 2 */
+ /* ï¿½Checking onlyï¿½ rule will be enforced by trigger in Phase 2 */
 );
 GO
 
