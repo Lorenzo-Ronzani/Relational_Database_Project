@@ -12,7 +12,7 @@
 
   Prepared Queries 
   Prepare relevant queries for your populated database. Create an SQL file named 
-  “prepared_queries.sql”. 
+  “[your name]_prepared_queries.sql”. 
   This file should contain at least 3 queries that meet the following requirements: 
   # Each query is in a stored procedure or user-defined function format. 
   # Each query performs a meaningful action based on the case study. 
