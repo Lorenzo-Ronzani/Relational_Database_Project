@@ -1,6 +1,6 @@
 /*================================================================================================
   DATA2201 – Phase 1
-  File: wlomazzi-queries.sql
+  File: wlomazzi_prepared_queries.sql
   Group D: Wesley Lomazzi, Lorenzo Ranzoni, Gabriel Passarelli
   Description: Bank Database queries by Wesley Lomazzi
   SKS National Bank
