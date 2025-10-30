@@ -43,6 +43,7 @@ DELETE FROM Loan;
 DELETE FROM Account;
 DELETE FROM Customer;
 DELETE FROM Employee;
+DELETE FROM EmployeeLocation;
 DELETE FROM Location;
 
 --------------------------------------------------
@@ -642,6 +643,81 @@ ORDER BY o.OverdraftID;
 */
 
 
+--==================== Populating AccountHolder =================================================================================
+GO
+PRINT 'Populating AccountHolder...';
+
+--------------------------------------------------
+-- 1. Clean existing data
+--------------------------------------------------
+DELETE FROM AccountHolder;
+
+--------------------------------------------------
+-- 2. Configuration
+--------------------------------------------------
+DECLARE @AccountCount INT = (SELECT COUNT(*) FROM Account);
+DECLARE @CustomerCount INT = (SELECT COUNT(*) FROM Customer);
+DECLARE @JointPct INT = 25; -- Around 25% of accounts will have a joint holder
+
+--------------------------------------------------
+-- 3. Assign one primary customer per account
+--------------------------------------------------
+;WITH AccountSeq AS (
+    SELECT 
+        a.AccountID,
+        ROW_NUMBER() OVER (ORDER BY a.AccountID) AS rn
+    FROM Account a
+)
+INSERT INTO AccountHolder (AccountID, CustomerID)
+SELECT 
+    a.AccountID,
+    ((a.rn - 1) % @CustomerCount) + 1 AS CustomerID
+FROM AccountSeq a;
+
+PRINT 'Populating AccountHolder: Step 1/2 – Primary account holders assigned.';
+
+--------------------------------------------------
+-- 4. Add joint holders (~25% of accounts)
+--------------------------------------------------
+;WITH AccountSeq AS (
+    SELECT 
+        a.AccountID,
+        ROW_NUMBER() OVER (ORDER BY a.AccountID) AS rn
+    FROM Account a
+)
+INSERT INTO AccountHolder (AccountID, CustomerID)
+SELECT 
+    a.AccountID,
+    ((a.rn + 45) % @CustomerCount) + 1 AS JointHolderID
+FROM AccountSeq a
+WHERE (a.AccountID % 100) < @JointPct
+  AND NOT EXISTS (
+        SELECT 1 
+        FROM AccountHolder ah
+        WHERE ah.AccountID = a.AccountID
+          AND ah.CustomerID = ((a.rn + 45) % @CustomerCount) + 1
+    );
+
+PRINT 'Populating AccountHolder: Step 2/2 – Joint holders assigned.';
+
+--------------------------------------------------
+-- 5. Validation
+--------------------------------------------------
+/*
+SELECT COUNT(*) AS TotalLinks FROM AccountHolder;
+
+-- Preview a sample of linked records
+SELECT TOP 20 
+    ah.AccountID,
+    c.FirstName,
+    c.LastName,
+    c.Email
+FROM AccountHolder ah
+JOIN Customer c ON ah.CustomerID = c.CustomerID
+ORDER BY ah.AccountID;
+*/
+
+--PRINT 'AccountHolder table populated successfully!';
 
 
 --==================== Populating Loan ==========================================================================================
@@ -880,31 +956,46 @@ GO
 DECLARE 
     @Branches INT,
     @Locations INT,
+	@LocationType INT,
     @Employees INT,
+	@EmployeeLocation INT,
     @Customers INT,
     @Accounts INT,
+	@AccountHolder INT,
+	@AccountType INT,
     @Overdrafts INT,
     @Loans INT,
+	@LoanCustomer INT,
     @LoanPayments INT;
 
 SELECT @Branches = COUNT(*) FROM Branch;
 SELECT @Locations = COUNT(*) FROM Location;
+SELECT @LocationType = COUNT(*) FROM LocationType;
 SELECT @Employees = COUNT(*) FROM Employee;
+SELECT @EmployeeLocation = COUNT(*) FROM EmployeeLocation;
 SELECT @Customers = COUNT(*) FROM Customer;
 SELECT @Accounts = COUNT(*) FROM Account;
+SELECT @AccountHolder = COUNT(*) FROM AccountHolder;
+SELECT @AccountType = COUNT(*) FROM AccountType;
 SELECT @Overdrafts = COUNT(*) FROM Overdraft;
 SELECT @Loans = COUNT(*) FROM Loan;
+SELECT @LoanCustomer = COUNT(*) FROM LoanCustomer;
 SELECT @LoanPayments = COUNT(*) FROM LoanPayment;
 
 PRINT '--------------------------------------------------------';
-PRINT 'Branches:      ' + CAST(@Branches AS varchar(20));
-PRINT 'Locations:     ' + CAST(@Locations AS varchar(20));
-PRINT 'Employees:     ' + CAST(@Employees AS varchar(20));
-PRINT 'Customers:     ' + CAST(@Customers AS varchar(20));
-PRINT 'Accounts:      ' + CAST(@Accounts AS varchar(20));
-PRINT 'Overdrafts:    ' + CAST(@Overdrafts AS varchar(20));
-PRINT 'Loans:         ' + CAST(@Loans AS varchar(20));
-PRINT 'LoanPayments:  ' + CAST(@LoanPayments AS varchar(20));
+PRINT 'Accounts........: ' + CAST(@Accounts AS varchar(20));
+PRINT 'AccountHolder...: ' + CAST(@AccountHolder AS varchar(20));
+PRINT 'AccountType.....: ' + CAST(@AccountType AS varchar(20));
+PRINT 'Branch..........: ' + CAST(@Branches AS varchar(20));
+PRINT 'Customer........: ' + CAST(@Customers AS varchar(20));
+PRINT 'Employee........: ' + CAST(@Employees AS varchar(20));
+PRINT 'EmployeeLocation: ' + CAST(@EmployeeLocation AS varchar(20));
+PRINT 'Loan............: ' + CAST(@Loans AS varchar(20));
+PRINT 'LoanCustomer....: ' + CAST(@LoanCustomer AS varchar(20));
+PRINT 'LoanPayments....: ' + CAST(@LoanPayments AS varchar(20));
+PRINT 'Location........: ' + CAST(@Locations AS varchar(20));
+PRINT 'LocationType....: ' + CAST(@LocationType AS varchar(20));
+PRINT 'Overdrafts......: ' + CAST(@Overdrafts AS varchar(20));
 PRINT '--------------------------------------------------------';
 PRINT 'Data population completed successfully!';
 PRINT '==================== End of Script ====================';
