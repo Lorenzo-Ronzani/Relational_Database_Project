@@ -2,6 +2,11 @@
    DATA2201 – Phase 1
    File:       populate_database.sql
    Project:    SKS_National_Bank
+   Group D: 
+   Wesley Lomazzi.....: 461407
+   Lorenzo Ronzani....: 460676
+   Gabriel Passarelli.: 460625
+
    Target DB:  BankDatabase
    Purpose:    Populate the database with realistic sample data 
                (reseed-safe and dependency-order aware)
@@ -452,6 +457,69 @@ ORDER BY CustomerID;
 
 
 
+/* ================================================================
+   Purpose: Redistribute Customer -> Employee assignments
+   Ensures all 500 customers are evenly assigned to 50 employees
+   (10 customers per employee as Banker, 10 as Loan Officer)
+   ================================================================ */
+
+USE BankDatabase;
+GO
+
+-- Step 1: Create temporary table with Employee IDs
+DECLARE @Employee TABLE (RowNum INT IDENTITY(1,1), EmpID INT);
+INSERT INTO @Employee (EmpID)
+SELECT EmployeeID FROM Employee ORDER BY EmployeeID;
+
+DECLARE @TotalEmployees INT = (SELECT COUNT(*) FROM @Employee);
+DECLARE @CustomerCount INT = (SELECT COUNT(*) FROM Customer);
+
+-- Step 2: Update BankerID based on round-robin distribution
+;WITH NumberedCustomers AS (
+    SELECT CustomerID,
+           ROW_NUMBER() OVER (ORDER BY CustomerID) AS rn
+    FROM Customer
+)
+UPDATE c
+SET c.BankerID = (
+    SELECT EmpID FROM @Employee 
+    WHERE RowNum = ((nc.rn - 1) % @TotalEmployees) + 1
+)
+FROM Customer c
+JOIN NumberedCustomers nc ON c.CustomerID = nc.CustomerID;
+
+-- Step 3: Update LoanOfficerID using an offset so it differs from BankerID
+;WITH NumberedCustomers AS (
+    SELECT CustomerID,
+           ROW_NUMBER() OVER (ORDER BY CustomerID) AS rn
+    FROM Customer
+)
+UPDATE c
+SET c.LoanOfficerID = (
+    SELECT EmpID FROM @Employee 
+    WHERE RowNum = ((nc.rn + 5) % @TotalEmployees) + 1  -- shift by 5 to avoid duplicates
+)
+FROM Customer c
+JOIN NumberedCustomers nc ON c.CustomerID = nc.CustomerID;
+
+-- Step 4: Validation summary
+/*
+PRINT 'Redistribution completed successfully.';
+PRINT 'Employee and customer assignments summary:';
+SELECT 
+    BankerID, COUNT(*) AS TotalAsBanker
+FROM Customer
+GROUP BY BankerID
+ORDER BY BankerID;
+
+SELECT 
+    LoanOfficerID, COUNT(*) AS TotalAsLoanOfficer
+FROM Customer
+GROUP BY LoanOfficerID
+ORDER BY LoanOfficerID;
+*/
+
+
 
 
 --==================== Populating AccountType ===================================================================================
@@ -643,6 +711,8 @@ ORDER BY o.OverdraftID;
 */
 
 
+
+
 --==================== Populating AccountHolder =================================================================================
 GO
 PRINT 'Populating AccountHolder...';
@@ -661,41 +731,59 @@ DECLARE @JointPct INT = 25; -- Around 25% of accounts will have a joint holder
 
 --------------------------------------------------
 -- 3. Assign one primary customer per account
+--    ✅ FIXED: Dynamically links to actual CustomerID values (avoids FK conflicts)
 --------------------------------------------------
 ;WITH AccountSeq AS (
     SELECT 
         a.AccountID,
         ROW_NUMBER() OVER (ORDER BY a.AccountID) AS rn
     FROM Account a
+),
+CustomerSeq AS (
+    SELECT 
+        c.CustomerID,
+        ROW_NUMBER() OVER (ORDER BY c.CustomerID) AS rn
+    FROM Customer c
 )
 INSERT INTO AccountHolder (AccountID, CustomerID)
 SELECT 
     a.AccountID,
-    ((a.rn - 1) % @CustomerCount) + 1 AS CustomerID
-FROM AccountSeq a;
+    c.CustomerID
+FROM AccountSeq a
+JOIN CustomerSeq c
+    ON ((a.rn - 1) % @CustomerCount) + 1 = c.rn;
 
 PRINT 'Populating AccountHolder: Step 1/2 – Primary account holders assigned.';
 
 --------------------------------------------------
 -- 4. Add joint holders (~25% of accounts)
+--    Uses dynamic CustomerSeq to ensure FK integrity and avoid duplicates
 --------------------------------------------------
 ;WITH AccountSeq AS (
     SELECT 
         a.AccountID,
         ROW_NUMBER() OVER (ORDER BY a.AccountID) AS rn
     FROM Account a
+),
+CustomerSeq AS (
+    SELECT 
+        c.CustomerID,
+        ROW_NUMBER() OVER (ORDER BY c.CustomerID) AS rn
+    FROM Customer c
 )
 INSERT INTO AccountHolder (AccountID, CustomerID)
 SELECT 
     a.AccountID,
-    ((a.rn + 45) % @CustomerCount) + 1 AS JointHolderID
+    c.CustomerID
 FROM AccountSeq a
+JOIN CustomerSeq c
+    ON ((a.rn + 45) % @CustomerCount) + 1 = c.rn
 WHERE (a.AccountID % 100) < @JointPct
   AND NOT EXISTS (
         SELECT 1 
         FROM AccountHolder ah
         WHERE ah.AccountID = a.AccountID
-          AND ah.CustomerID = ((a.rn + 45) % @CustomerCount) + 1
+          AND ah.CustomerID = c.CustomerID
     );
 
 PRINT 'Populating AccountHolder: Step 2/2 – Joint holders assigned.';
@@ -718,6 +806,8 @@ ORDER BY ah.AccountID;
 */
 
 --PRINT 'AccountHolder table populated successfully!';
+
+
 
 
 --==================== Populating Loan ==========================================================================================

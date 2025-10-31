@@ -1,7 +1,11 @@
 //*================================================================================================
-  DATA2201 � Phase 1
-  File: LorenzoRonzani_prepared_queries.sql
-  Group D: Wesley Lomazzi, Lorenzo Ronzani, Gabriel Passarelli
+  DATA2201 Phase 1
+  File: prepared_queries_LorenzoRonzani.sql
+  Group D: 
+  Wesley Lomazzi.....: 461407
+  Lorenzo Ronzani....: 460676
+  Gabriel Passarelli.: 460625
+  
   Description: Bank Database queries by Lorenzo Ronzani
   SKS National Bank
  =================================================================================================
@@ -12,7 +16,7 @@
 
   Prepared Queries 
   Prepare relevant queries for your populated database. Create an SQL file named 
-  �[your name]_prepared_queries.sql�. 
+  prepared_queries_[YourName].sql
   This file should contain at least 3 queries that meet the following requirements: 
   # Each query is in a stored procedure or user-defined function format. 
   # Each query performs a meaningful action based on the case study. 
