@@ -1,7 +1,10 @@
 /* ================================================================
 --  DATA2201 – Phase 1
 --  File: create_database.sql
---  Group D: Wesley Lomazzi, Lorenzo Ranzoni, Gabriel Passarelli
+--  Group D: 
+	Wesley Lomazzi: 461407
+	Lorenzo Ronzani: 460676
+	Gabriel Passarelli: 460625
 --  Description: Bank Database creation script (updated to new ERD)
 --  SKS National Bank
 -- ================================================================
