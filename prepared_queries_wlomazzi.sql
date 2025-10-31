@@ -1,6 +1,6 @@
 /*================================================================================================
   DATA2201 – Phase 1
-  File: wlomazzi_prepared_queries.sql
+  File: prepared_queries_wlomazzi.sql
   Group D: 
   Wesley Lomazzi.....: 461407
   Lorenzo Ronzani....: 460676
@@ -16,7 +16,7 @@
 
   Prepared Queries 
   Prepare relevant queries for your populated database. Create an SQL file named 
-  “[your name]_prepared_queries.sql”. 
+  “prepared_queries_[your name].sql”. 
   This file should contain at least 3 queries that meet the following requirements: 
   # Each query is in a stored procedure or user-defined function format. 
   # Each query performs a meaningful action based on the case study. 
@@ -180,3 +180,8 @@ GO
 -- Test
 EXEC GetLoanDelinquencyRateByBranch;
 GO
+
+/*----------------------------------------------------------------
+   End of prepared_queries_wlomazzi.sql
+-----------------------------------------------------------------*/
+

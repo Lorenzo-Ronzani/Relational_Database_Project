@@ -1,18 +1,16 @@
 /*================================================================================================
   DATA2201 – Phase 1
-  File: gabriel_passarelli_prepared_queries.sql
-  Group D: Wesley Lomazzi, Lorenzo Ronzani, Gabriel Passarelli
+  File: prepared_queries_gabriel_passarelli.sql
+  Group D: 
+  Wesley Lomazzi.....: 461407
+  Lorenzo Ronzani....: 460676
+  Gabriel Passarelli.: 460625
+
   Description: Bank Database queries by Gabriel Passarelli
   SKS National Bank
-================================================================================================
-  ERD
-  https://dbdiagram.io/d/BankDatabase-Diagram-68e56472d2b621e422b9b2cc
-  https://dbdocs.io/wlomazzi/Bank-Database?view=relationships
-  https://github.com/Lorenzo-Ronzani/Relational_Database_Project
-
-  Prepared Queries 
-  Prepare relevant queries for your populated database. Create an SQL file named 
-  “[your name]_prepared_queries.sql”. 
+==================================================================================================
+  Prepared Queries: Prepare relevant queries for your populated database. Create an SQL file named 
+  “prepared_queries_[YourName].sql”. 
   This file should contain at least 3 queries that meet the following requirements: 
   # Each query is in a stored procedure or user-defined function format. 
   # Each query performs a meaningful action based on the case study. 

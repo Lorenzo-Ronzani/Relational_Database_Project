@@ -5,25 +5,19 @@
   Wesley Lomazzi.....: 461407
   Lorenzo Ronzani....: 460676
   Gabriel Passarelli.: 460625
-  
+
   Description: Bank Database queries by Lorenzo Ronzani
   SKS National Bank
  =================================================================================================
-  ERD
-  https://dbdiagram.io/d/BankDatabase-Diagram-68e56472d2b621e422b9b2cc
-  https://dbdocs.io/wlomazzi/Bank-Database?view=relationships
-  https://github.com/Lorenzo-Ronzani/Relational_Database_Project
-
-  Prepared Queries 
-  Prepare relevant queries for your populated database. Create an SQL file named 
+  Prepared Queries: Prepare relevant queries for your populated database. Create an SQL file named 
   prepared_queries_[YourName].sql
   This file should contain at least 3 queries that meet the following requirements: 
   # Each query is in a stored procedure or user-defined function format. 
   # Each query performs a meaningful action based on the case study. 
   # Each query includes a comment that describes the purpose of the query. 
   # Each query has a separate SQL statement that tests the query.
-
 */
+
 USE BankDatabase;
 GO
 
