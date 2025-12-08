@@ -48,7 +48,6 @@ DELETE FROM Loan;
 DELETE FROM Account;
 DELETE FROM Customer;
 DELETE FROM Employee;
-DELETE FROM EmployeeLocation;
 DELETE FROM Location;
 
 --------------------------------------------------
@@ -899,16 +898,45 @@ ORDER BY LoanID;
 
 
 
-
 --==================== Populating LoanCustomer ==================================================================================
 GO
 PRINT 'Populating LoanCustomer...';
-
---------------------------------------------------
+GO
+----------------------------------------------------------------
 -- 1. Clean existing data
---------------------------------------------------
+----------------------------------------------------------------
 DELETE FROM LoanCustomer;
 
+--------------------------------------------------
+-- 2. Assign exactly ONE customer per loan
+--    Customers ordered DESC (largest CustomerID first)
+--------------------------------------------------
+DECLARE @CustomerCount INT = (SELECT COUNT(*) FROM Customer);
+
+;WITH LoanSeq AS (
+    SELECT 
+        l.LoanID,
+        ROW_NUMBER() OVER (ORDER BY l.LoanID) AS rn
+    FROM Loan l
+),
+CustomerSeq AS (
+    SELECT 
+        c.CustomerID,
+        ROW_NUMBER() OVER (ORDER BY c.CustomerID DESC) AS rn   -- << ORDENADO DO MAIOR PARA O MENOR
+    FROM Customer c
+)
+INSERT INTO LoanCustomer (LoanID, CustomerID)
+SELECT 
+    ls.LoanID,
+    cs.CustomerID
+FROM LoanSeq ls
+JOIN CustomerSeq cs
+    ON cs.rn = ((ls.rn - 1) % @CustomerCount) + 1;
+
+PRINT 'LoanCustomer populated: Exactly one customer per loan (customers sorted DESC).';
+
+
+/* Commented, because we only want one client per loan for the demonstration data
 --------------------------------------------------
 -- 2. Configuration
 --------------------------------------------------
@@ -955,6 +983,8 @@ WHERE (ls.LoanID % 100) < @JointLoanPct
     );
 
 PRINT 'Populating LoanCustomer: Step 2/2: Joint loan customers assigned.';
+*/
+
 
 --------------------------------------------------
 -- 5. Validation
