@@ -1,6 +1,6 @@
 /* ============================================================
    FILE: create_users.sql
-   PHASE 2 – Users & Privileges
+   PHASE 2 Users and Privileges
    SKS National Bank – Group D
    ============================================================ */
 
