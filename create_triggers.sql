@@ -22,20 +22,20 @@
 use BankDatabase
 GO
 
-/*=================================================================================================================
+/*===================================================================================================================
   Script: CREATE Audit Table
-===================================================================================================================*/
+=====================================================================================================================*/
 CREATE TABLE Audit (
     AuditID INT IDENTITY(1,1) PRIMARY KEY,          -- Primary Key
     EventDescription NVARCHAR(500) NOT NULL,        -- Event Description: what type of execution
-    EventDate DATETIME NOT NULL DEFAULT(GETDATE())  -- A timestamp field that automatically captures the date and time when a record is created
+    EventDate DATETIME NOT NULL DEFAULT(GETDATE())  -- A timestamp field: get date and time when a record is created
 );
 
 
 GO
-/*=================================================================================================================
+/*===================================================================================================================
   Trigger 1 Script: CREATE trigger trg_Audit_Customer_Insert in Customer table
-===================================================================================================================*/
+=====================================================================================================================*/
 CREATE TRIGGER trg_Audit_Customer_Insert
 ON Customer
 AFTER INSERT
