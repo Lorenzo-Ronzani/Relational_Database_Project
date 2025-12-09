@@ -56,11 +56,9 @@ WHERE EmployeeID = 3;  -- Employee 3 -> Calgary University District
    3) VALIDATION QUERIES
    ==================================================== */
 
--- Ver spatial em formato WKT
 SELECT EmployeeID, FirstName, LastName,
        EmployeeGeoLocation.ToString() AS WKTPresentation
 FROM dbo.Employee;
 
--- Ver JSON
 SELECT CustomerID, FirstName, LastName, ExtraInfoJSON
 FROM dbo.Customer;
