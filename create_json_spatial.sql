@@ -4,13 +4,14 @@ GO
 /* ====================================================
    1) ADD JSON COLUMN TO CUSTOMER TABLE
    ==================================================== */
-
+/* wlomazzi: Removed, added to the script create_database.sql
 ALTER TABLE dbo.Customer
 ADD ExtraInfoJSON NVARCHAR(MAX) NULL;
 GO
+*/
 
-/* Insert sample JSON into all Customer rows */
-
+/* Insert sample JSON into all Customer rows   */
+/* Changed to update just one Customer ==> CustomerID = 1 */
 UPDATE dbo.Customer
 SET ExtraInfoJSON =
     '{
@@ -22,17 +23,19 @@ SET ExtraInfoJSON =
                 "Phone": "403-111-2222"
             }
         ]
-     }';
+     }'
+WHERE CustomerID = 1;
 GO
 
 
 /* ====================================================
    2) ADD SPATIAL COLUMN TO EMPLOYEE TABLE
    ==================================================== */
-
+/* wlomazzi: Removed, added to the script create_database.sql
 ALTER TABLE dbo.Employee
 ADD EmployeeGeoLocation GEOGRAPHY NULL;
 GO
+*/
 
 /* Insert sample geographic coordinates
    (example employees assigned to real-world coordinates)
@@ -61,4 +64,5 @@ SELECT EmployeeID, FirstName, LastName,
 FROM dbo.Employee;
 
 SELECT CustomerID, FirstName, LastName, ExtraInfoJSON
-FROM dbo.Customer;
+FROM dbo.Customer
+WHERE dbo.Customer.CustomerID=1;

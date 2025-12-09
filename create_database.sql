@@ -102,6 +102,7 @@ CREATE TABLE dbo.Employee (
     Province    varchar(2) NOT NULL,
     StartDate   date NOT NULL,
     ManagerID   int NULL,
+    EmployeeGeoLocation GEOGRAPHY NULL,
     CONSTRAINT PK_Employee PRIMARY KEY (EmployeeID)
 );
 GO
@@ -129,6 +130,7 @@ CREATE TABLE dbo.Customer (
     BankerID      int NULL,
     LoanOfficerID int NULL,
     CreatedAt     datetime2(3) NOT NULL CONSTRAINT DF_Customer_CreatedAt DEFAULT (sysutcdatetime()),
+    ExtraInfoJSON NVARCHAR(MAX) NULL, 
     CONSTRAINT PK_Customer PRIMARY KEY (CustomerID),
     CONSTRAINT UQ_Customer_Email UNIQUE (Email),
     CONSTRAINT CK_Customer_Email CHECK (Email IS NULL OR Email LIKE '%_@_%._%')
