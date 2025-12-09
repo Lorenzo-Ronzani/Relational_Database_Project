@@ -67,15 +67,15 @@ PRINT '===============================================================';
 -----------------------------------------------------------------------
 -- 5. Optional: Reseed identity values for a clean start
 -----------------------------------------------------------------------
-DBCC CHECKIDENT ('Branch', RESEED, 0);
-DBCC CHECKIDENT ('LocationType', RESEED, 0);
-DBCC CHECKIDENT ('Location', RESEED, 0);
-DBCC CHECKIDENT ('Employee', RESEED, 0);
-DBCC CHECKIDENT ('Customer', RESEED, 0);
-DBCC CHECKIDENT ('AccountType', RESEED, 0);
-DBCC CHECKIDENT ('Account', RESEED, 0);
-DBCC CHECKIDENT ('Overdraft', RESEED, 0);
-DBCC CHECKIDENT ('Loan', RESEED, 0);
+DBCC CHECKIDENT ('Branch', RESEED, 1);
+DBCC CHECKIDENT ('LocationType', RESEED, 1);
+DBCC CHECKIDENT ('Location', RESEED, 1);
+DBCC CHECKIDENT ('Employee', RESEED, 1);
+DBCC CHECKIDENT ('Customer', RESEED, 1);
+DBCC CHECKIDENT ('AccountType', RESEED, 1);
+DBCC CHECKIDENT ('Account', RESEED, 1);
+DBCC CHECKIDENT ('Overdraft', RESEED, 1);
+DBCC CHECKIDENT ('Loan', RESEED, 1);
 
 PRINT 'Identity reseed completed.';
 PRINT '===============================================================';
