@@ -271,45 +271,53 @@ GO
 EXEC GetAccountsByCustomer @CustomerID = 3;
 GO
 
--- 9) Purpose: Show all loans of a customer and how many payments each one has.
-CREATE OR ALTER PROCEDURE GetLoansAndPayments
-    @CustomerID INT
+-- 9) Purpose: List all customers from a specific province.
+
+CREATE OR ALTER PROCEDURE GetCustomersByProvince
+    @Province CHAR(2)
 AS
 BEGIN
     SELECT 
-        lc.LoanID,
-        COUNT(lp.LoanID) AS TotalPayments
-    FROM dbo.LoanCustomer AS lc
-    LEFT JOIN dbo.LoanPayment AS lp ON lc.LoanID = lp.LoanID
-    WHERE lc.CustomerID = @CustomerID
-    GROUP BY lc.LoanID
-    ORDER BY lc.LoanID;
+        CustomerID,
+        FirstName,
+        LastName,
+        City,
+        Province,
+        Email
+    FROM dbo.Customer
+    WHERE Province = @Province
+    ORDER BY LastName, FirstName;
 END;
 GO
+
 -- Test
-EXEC GetLoansAndPayments @CustomerID = 3;
+EXEC GetCustomersByProvince @Province = 'AB';
 GO
 
--- 10) Purpose: Show all overdraft records for a customer.
-CREATE OR ALTER PROCEDURE GetCustomerOverdrafts
-    @CustomerID INT
+-- 10) Purpose: List all employees assigned to a specific Branch.
+
+CREATE OR ALTER PROCEDURE GetEmployeesByBranch
+    @BranchID INT
 AS
 BEGIN
     SELECT 
-        o.OverdraftID,
-        o.AccountID,
-        o.Amount,
-        o.OccurredOn
-    FROM dbo.Overdraft AS o
-    INNER JOIN dbo.AccountHolder AS ah ON ah.AccountID = o.AccountID
-    WHERE ah.CustomerID = @CustomerID
-    ORDER BY o.OccurredOn DESC;
+        e.EmployeeID,
+        e.FirstName,
+        e.LastName,
+        e.City,
+        e.Province,
+        l.Name AS LocationName
+    FROM dbo.EmployeeLocation el
+    INNER JOIN dbo.Location l ON el.LocationID = l.LocationID
+    INNER JOIN dbo.Employee e ON el.EmployeeID = e.EmployeeID
+    WHERE l.BranchID = @BranchID
+    ORDER BY e.LastName, e.FirstName;
 END;
 GO
--- Test
-EXEC GetCustomerOverdrafts @CustomerID = 3;
-GO
 
+-- Test
+EXEC GetEmployeesByBranch @BranchID = 1;
+GO
 /*----------------------------------------------------------------
    End of prepeared queries Gabriel Passarelli
 -----------------------------------------------------------------*/
