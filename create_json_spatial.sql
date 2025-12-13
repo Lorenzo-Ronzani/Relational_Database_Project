@@ -1,7 +1,11 @@
---  Group D: 
---  Wesley Lomazzi.....: 461407
---  Lorenzo Ronzani....: 460676
---  Gabriel Passarelli.: 460625
+/*
+   
+Group D: 
+Wesley Lomazzi.....: 461407
+Lorenzo Ronzani....: 460676
+Gabriel Passarelli.: 460625
+
+*/
 
 USE BankDatabase;
 GO
