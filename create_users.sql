@@ -1,7 +1,10 @@
 /* ============================================================
    FILE: create_users.sql
    PHASE 2 Users and Privileges
-   SKS National Bank - Group D
+   SKS National Bank - Group 
+--  Wesley Lomazzi.....: 461407
+--  Lorenzo Ronzani....: 460676
+--  Gabriel Passarelli.: 460625
    ============================================================ */
 
 USE BankDatabase;
@@ -55,4 +58,5 @@ DENY INSERT, UPDATE, DELETE ON dbo.LoanPayment    TO accountant_group_D;
 DENY INSERT, UPDATE, DELETE ON dbo.LoanCustomer   TO accountant_group_D;
 DENY INSERT, UPDATE, DELETE ON dbo.Overdraft      TO accountant_group_D;
 GO
+
 
