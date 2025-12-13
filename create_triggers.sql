@@ -2,9 +2,9 @@
 --  DATA2201 – Phase 1
 --  File: create_triggers.sql
 --  Group D: 
---  Wesley Lomazzi.....: 461407
---  Lorenzo Ronzani....: 460676
---  Gabriel Passarelli.: 460625
+Wesley Lomazzi.....: 461407
+Lorenzo Ronzani....: 460676
+Gabriel Passarelli.: 460625
 
 --  Description: Triggers to track INSERT / UPDATE / DELETE 
 --  SKS National Bank
